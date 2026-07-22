@@ -127,6 +127,16 @@ public class LoginController {
         novo.setSenha_hash(admSenha.getText());
         novo.setCriado_em(LocalDate.now());
 
+        if (admNome.getText().isEmpty() || admEmail.getText().isEmpty() || admSenha.getText().isEmpty()) {
+            exibirAlerta("Falha", "Preencha todos os campos.");
+            return;
+        }
+
+        if (admSenha.getLength() < 6) {
+            exibirAlerta("Falha", "A senha deve possuir um mínimo de 6 caracteres.");
+            return;
+        }
+
         if(admNome.getText() != null && admEmail.getText() != null && admSenha.getText() != null){
             primeiroAcessoPane.setVisible(false);
             primeiroAcessoPane.setManaged(false);
@@ -149,10 +159,7 @@ public class LoginController {
             }
 
 
-            exibirAlertaSucesso("Sucesso", "Administrador cadastrado! Agora faça login.");
-        } else {
-            exibirAlerta("FALHA", "Preencha todos os campos");
+            exibirAlertaSucesso("Sucesso", "Administrador cadastrado com sucesso!");
         }
-
     }
 }
