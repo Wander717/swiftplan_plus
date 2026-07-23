@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //VISUAL
-import javafx.scene.layout.Pane;
+
 
 public class MainShellController {
     @FXML private ComboBox<String> cbAno;
@@ -85,7 +85,7 @@ public class MainShellController {
         configurarResetInicial();
         configurarValoresPreProgramados();
         processarDadosAnos();
-        verificarAnoAdm();
+        criarPrimeiroCalendario();
     }
 
     private void configurarPreValoresAnos(){
@@ -507,14 +507,12 @@ public class MainShellController {
         }
     }
 
-    private void verificarAnoAdm() {
+    private void criarPrimeiroCalendario() {
         if ("ADM".equals(logado.getTipo()) && cbAno.getItems().isEmpty()) {
-            exibirAlerta("Aviso", "Foram adicionados de forma provisória: Ano, Semestre e Sprints. Você deve alterá-los na página de CALENDÁRIOS.");
-
             SemestreLetivoService service = new SemestreLetivoService();
             try {
                 service.criarSemestre1DoAnoAtual(1); // só passa o ID do adm
-                System.out.println("Semestre e sprints criados com sucesso!");
+                exibirAlerta("Aviso", "Foram adicionados de forma provisória: Ano, Semestre e Sprints. Você deve alterá-los de acordo com a sua necessidade na página 'Calendário Acadêmico'.");
             } catch (SQLException e) {
                 System.out.println("Erro ao criar semestre: " + e.getMessage());
             }

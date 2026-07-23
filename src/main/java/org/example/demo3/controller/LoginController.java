@@ -153,13 +153,11 @@ public class LoginController {
 
                 logado.setId_usuario(u.getId_usuario());
                 logado.setTipo("ADM");
+                exibirAlertaSucesso("Sucesso", "Administrador cadastrado com sucesso!");
                 abrirMainShell();
             } catch (SQLException e){
                 e.printStackTrace();
             }
-
-
-            exibirAlertaSucesso("Sucesso", "Administrador cadastrado com sucesso!");
         }
     }
 }
