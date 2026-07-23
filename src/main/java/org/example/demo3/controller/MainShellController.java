@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.Node;
+import org.example.demo3.SemestreLetivoService;
 import org.example.demo3.UsuarioAtual;
 import org.example.demo3.dao.CursoDAO;
 import org.example.demo3.dao.DisciplinaDAO;
@@ -84,6 +85,7 @@ public class MainShellController {
         configurarResetInicial();
         configurarValoresPreProgramados();
         processarDadosAnos();
+        verificarAnoAdm();
     }
 
     private void configurarPreValoresAnos(){
@@ -503,6 +505,29 @@ public class MainShellController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void verificarAnoAdm() {
+        if ("ADM".equals(logado.getTipo()) && cbAno.getItems().isEmpty()) {
+            exibirAlerta("Aviso", "Foram adicionados de forma provisória: Ano, Semestre e Sprints. Você deve alterá-los na página de CALENDÁRIOS.");
+
+            SemestreLetivoService service = new SemestreLetivoService();
+            try {
+                service.criarSemestre1DoAnoAtual(1); // só passa o ID do adm
+                System.out.println("Semestre e sprints criados com sucesso!");
+            } catch (SQLException e) {
+                System.out.println("Erro ao criar semestre: " + e.getMessage());
+            }
+        }
+        processarDadosAnos();
+    }
+
+    private void exibirAlerta(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 
 }
