@@ -44,14 +44,10 @@ public class SprintDAO {
         return sprints;
     }
 
-    public void inserirSprint(Sprint sprint) {
+    public void inserirSprint(Sprint sprint) throws SQLException {
         String sql = """
             INSERT INTO sprint (
-                semestre_letivo_id,
-                numero,
-                data_inicio,
-                data_fim,
-                data_review
+                semestre_letivo_id, numero, data_inicio, data_fim, data_review
             ) VALUES (?, ?, ?, ?, ?)
             """;
 
@@ -65,11 +61,6 @@ public class SprintDAO {
             stmt.setDate(5, Date.valueOf(sprint.getData_review()));
 
             stmt.executeUpdate();
-
-            System.out.println("Sprint inserida com sucesso!");
-
-        } catch (SQLException e) {
-            System.out.println("Erro ao inserir sprint: " + e.getMessage());
         }
     }
 
