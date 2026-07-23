@@ -3,10 +3,7 @@ package org.example.demo3.dao;
 import org.example.demo3.DatabaseConnection;
 import org.example.demo3.entity.SemestreLetivo;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -205,4 +202,35 @@ public class SemestreLetivoDAO {
             }
         }
     }
+
+    public int inserirSemestre(SemestreLetivo semestre) throws SQLException {
+        String sql = """
+            INSERT INTO semestre_letivo (
+                criado_por_adm_id, ano, numero_semestre,
+                data_inicio, data_fim, data_tg, data_feira
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """;
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, semestre.getCriado_por_adm_id());
+            stmt.setInt(2, semestre.getAno());
+            stmt.setInt(3, semestre.getNumero_semestre());
+            stmt.setDate(4, Date.valueOf(semestre.getData_inicio()));
+            stmt.setDate(5, Date.valueOf(semestre.getData_fim()));
+            stmt.setDate(6, Date.valueOf(semestre.getData_tg()));
+            stmt.setDate(7, Date.valueOf(semestre.getData_feira()));
+
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1); // id_semestre_letivo gerado
+                }
+                throw new SQLException("Falha ao obter o ID do semestre letivo.");
+            }
+        }
+    }
+
 }
