@@ -76,6 +76,8 @@ public class LoginController {
                 } else {
                     exibirAlerta("Erro de Autenticação", "Senha incorreta.");
                 }
+            }else {
+                exibirAlerta("Erro de Autenticação", "Nenhum usuário com esse e-mail encontrado.");
             }
 
         } catch (SQLException e) {
