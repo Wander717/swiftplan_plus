@@ -192,8 +192,7 @@ public class MainShellController {
 
     @FXML
     void navBloqueios() {
-        if (!tbSem1.isSelected() || !tbSem2.isSelected()) {
-            exibirAlerta("Atenção", "Selecione o Ano/Semestre antes.");
+        if (!verificarBotoesSemestres()) {
             return;
         }
         try {
@@ -452,8 +451,7 @@ public class MainShellController {
 
     @FXML
     void navCalendario() {
-        if (!tbSem1.isSelected() || !tbSem2.isSelected()) {
-            exibirAlerta("Atenção", "Selecione o Ano/Semestre antes.");
+        if (!verificarBotoesSemestres()) {
             return;
         }
         try {
@@ -537,6 +535,27 @@ public class MainShellController {
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.getDialogPane().lookup(".content.label").setStyle("-fx-text-overrun: clip;");
         alert.showAndWait();
+    }
+
+
+    public boolean verificarBotoesSemestres() {
+        if (cbAno.getSelectionModel().isEmpty()) {
+            exibirAlerta("Erro", "O Ano não foi selecionado.");
+            return false;
+        }
+
+        if (!tbSem1.isSelected() && !tbSem2.isSelected()) {
+            exibirAlerta("Aviso", "Você precisa ter ao menos um semestre selecionado.");
+            return false;
+        }
+
+        if (tbSem1.isSelected()) {
+            tbSem2.setSelected(false);
+        } else if (tbSem2.isSelected()) {
+            tbSem1.setSelected(false);
+        }
+
+        return true;
     }
 
 
