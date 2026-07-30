@@ -1225,6 +1225,10 @@ public class AdmCalendarioBloqueiosController {
 
     @FXML
     public void handleCancelamentoSelecaoMes(){
+        if (cbMes.getSelectionModel().isEmpty()) {
+            exibirFeedback(lblFeedbackCalendario, "Erro: Selecione um mês.", true);
+            return;
+        }
         String mesSelecionadoCbMes = cbMes.getValue();
 
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("MMMM")
@@ -1325,5 +1329,24 @@ public class AdmCalendarioBloqueiosController {
         label.setVisible(true);
         label.setManaged(true);
         label.setStyle(isErro ? "-fx-text-fill: #e74c3c;" : "-fx-text-fill: #27ae60;");
+    }
+
+    //MÉTODO CHAMADO NO MAINSHELL
+    public void resetarParaPadrao() {
+        int anoFiltro = (logado.getAno() != null) ? logado.getAno() : LocalDate.now().getYear();
+        int numeroSemestre = (logado.getAnoSemestre() != null) ? logado.getAnoSemestre() : 1;
+
+        // Aba Calendário: recarrega sprints, datas macro e já dispara o reset da aba Bloqueios
+        carregarDadosPorAnoESemestre(anoFiltro, numeroSemestre);
+
+        // Volta a visualização para a primeira aba (Calendário)
+        tabPane.getSelectionModel().select(0);
+
+        // Garante que nenhuma seleção de dia/config de cancelamento fique "pendurada"
+        handleDesfazerSelecao();
+
+        listaBtnDia.clear();
+        gridDias.getChildren().clear();
+        cbMes.getSelectionModel().clearSelection();
     }
 }
