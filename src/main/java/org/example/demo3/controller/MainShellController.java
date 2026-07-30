@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -191,6 +192,10 @@ public class MainShellController {
 
     @FXML
     void navBloqueios() {
+        if (!tbSem1.isSelected() || !tbSem2.isSelected()) {
+            exibirAlerta("Atenção", "Selecione o Ano/Semestre antes.");
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/adm_calendario_bloqueios.fxml"));
@@ -447,6 +452,10 @@ public class MainShellController {
 
     @FXML
     void navCalendario() {
+        if (!tbSem1.isSelected() || !tbSem2.isSelected()) {
+            exibirAlerta("Atenção", "Selecione o Ano/Semestre antes.");
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/adm_calendario_bloqueios.fxml"));
             Parent novoConteudo = loader.load();
@@ -525,7 +534,10 @@ public class MainShellController {
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.getDialogPane().lookup(".content.label").setStyle("-fx-text-overrun: clip;");
         alert.showAndWait();
     }
+
 
 }
