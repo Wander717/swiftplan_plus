@@ -52,7 +52,7 @@ public class MainShellController {
     private List<SemestreLetivo> listaSl;
     private List<Disciplina> listaD;
     private List<Curso> listaCursos;
-
+    public ToggleGroup semestreGroup;
     private final List<Integer> ordemIdDisciplinas = new ArrayList<>();
     private final UsuarioAtual logado = UsuarioAtual.getInstancia();
 
@@ -87,6 +87,7 @@ public class MainShellController {
         configurarValoresPreProgramados();
         processarDadosAnos();
         criarPrimeiroCalendario();
+        configurarToggleSemestre();
     }
 
     private void configurarPreValoresAnos(){
@@ -99,16 +100,25 @@ public class MainShellController {
     }
 
     private void configurarPreValoresAnoSemestre(){
-        if (listaSl != null && !listaSl.isEmpty()) {
-            if (listaSl.getLast().getNumero_semestre().equals(1)){
-                tbSem1.setDisable(false);
-                tbSem1.setSelected(true);
-                logado.setAnoSemestre(1);
-            } else {
-                tbSem2.setDisable(false);
-                tbSem2.setSelected(true);
-                logado.setAnoSemestre(2);
+        if (listaSl == null || listaSl.isEmpty()) {
+            return;
+        }
+        Integer ultimoAno = listaSl.getLast().getAno();
+        for (SemestreLetivo sl : listaSl) {
+            if (sl.getAno().equals(ultimoAno)) {
+                if (sl.getNumero_semestre() == 1) {
+                    tbSem1.setDisable(false);
+                } else if (sl.getNumero_semestre() == 2) {
+                    tbSem2.setDisable(false);
+                }
             }
+        }
+        if (listaSl.getLast().getNumero_semestre().equals(1)) {
+            tbSem1.setSelected(true);
+            logado.setAnoSemestre(1);
+        } else {
+            tbSem2.setSelected(true);
+            logado.setAnoSemestre(2);
         }
     }
 
@@ -192,9 +202,7 @@ public class MainShellController {
 
     @FXML
     void navBloqueios() {
-        if (!verificarBotoesSemestres()) {
-            return;
-        }
+        if (!verificarBotoesSemestres()) {return;}
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/adm_calendario_bloqueios.fxml"));
@@ -202,13 +210,10 @@ public class MainShellController {
             Parent novoConteudo = loader.load();
 
             calendarioAtivoController = loader.getController();
-
             areaConteudo.getChildren().clear();
             areaConteudo.getChildren().add(novoConteudo);
-
             planejamentoAtivoController = null;
             coordPainelAtivoController = null;
-
             calendarioAtivoController.abrirAbaBloqueios();
 
         } catch (IOException e) {
@@ -395,9 +400,8 @@ public class MainShellController {
             tbSem1.setSelected(false);
         }
         processarDadosCursos();
-
         if (calendarioAtivoController != null) {
-            calendarioAtivoController.carregarDadosPorAnoESemestre(logado.getAno(), logado.getAnoSemestre());
+            calendarioAtivoController.resetarParaPadrao();
         }
     }
 
@@ -451,9 +455,7 @@ public class MainShellController {
 
     @FXML
     void navCalendario() {
-        if (!verificarBotoesSemestres()) {
-            return;
-        }
+        if (!verificarBotoesSemestres()) {return;}
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/adm_calendario_bloqueios.fxml"));
             Parent novoConteudo = loader.load();
@@ -474,11 +476,15 @@ public class MainShellController {
     }
 
     @FXML void navCursosHorarios() { carregarConteudo("/adm_cursos_horarios.fxml"); }
-    @FXML void navCoordenaodresAdms() { carregarConteudo("/adm_coordenadores_adms.fxml"); }
-    @FXML void navTemas() { carregarConteudo("/prof_temas.fxml"); }
+    @FXML void navCoordenaodresAdms() {carregarConteudo("/adm_coordenadores_adms.fxml"); }
+    @FXML void navTemas() {
+        if (!verificarBotoesSemestres()) {return;}
+        carregarConteudo("/prof_temas.fxml");
+    }
 
     @FXML
     void navCoordPainel() {
+        if (!verificarBotoesSemestres()) {return;}
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/coord_painel.fxml"));
             Parent novoConteudo = loader.load();
@@ -496,6 +502,7 @@ public class MainShellController {
 
     @FXML
     void navPlanejamento() {
+        if (!verificarBotoesSemestres()) { return ;}
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/prof_planejamento_stats_rotina.fxml"));
             Parent novoConteudo = loader.load();
@@ -544,18 +551,24 @@ public class MainShellController {
             return false;
         }
 
-        if (!tbSem1.isSelected() && !tbSem2.isSelected()) {
+        if (semestreGroup.getSelectedToggle() == null) {
             exibirAlerta("Aviso", "Você precisa ter ao menos um semestre selecionado.");
             return false;
         }
-
-        if (tbSem1.isSelected()) {
-            tbSem2.setSelected(false);
-        } else if (tbSem2.isSelected()) {
-            tbSem1.setSelected(false);
-        }
-
         return true;
+    }
+
+
+    public void configurarToggleSemestre() {
+        semestreGroup = new ToggleGroup();
+        tbSem1.setToggleGroup(semestreGroup);
+        tbSem2.setToggleGroup(semestreGroup);
+
+        semestreGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle == null) {
+                semestreGroup.selectToggle(oldToggle);
+            }
+        });
     }
 
 
