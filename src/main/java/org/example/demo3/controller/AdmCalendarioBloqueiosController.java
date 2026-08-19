@@ -1348,5 +1348,6 @@ public class AdmCalendarioBloqueiosController {
         listaBtnDia.clear();
         gridDias.getChildren().clear();
         cbMes.getSelectionModel().clearSelection();
+        carregarMesesCbMes();
     }
 }
