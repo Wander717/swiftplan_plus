@@ -202,7 +202,6 @@ public class MainShellController {
 
     @FXML
     void navBloqueios() {
-        if (!verificarBotoesSemestres()) {return;}
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/adm_calendario_bloqueios.fxml"));
@@ -219,6 +218,7 @@ public class MainShellController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (!verificarBotoesSemestres()) {return;}
     }
 
     private void processarDadosAnos() {
@@ -478,13 +478,12 @@ public class MainShellController {
     @FXML void navCursosHorarios() { carregarConteudo("/adm_cursos_horarios.fxml"); }
     @FXML void navCoordenaodresAdms() {carregarConteudo("/adm_coordenadores_adms.fxml"); }
     @FXML void navTemas() {
-        if (!verificarBotoesSemestres()) {return;}
         carregarConteudo("/prof_temas.fxml");
+        if (!verificarBotoesSemestres()) {return;}
     }
 
     @FXML
     void navCoordPainel() {
-        if (!verificarBotoesSemestres()) {return;}
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/coord_painel.fxml"));
             Parent novoConteudo = loader.load();
@@ -498,11 +497,11 @@ public class MainShellController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (!verificarBotoesSemestres()) {return;}
     }
 
     @FXML
     void navPlanejamento() {
-        if (!verificarBotoesSemestres()) { return ;}
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/prof_planejamento_stats_rotina.fxml"));
             Parent novoConteudo = loader.load();
@@ -519,6 +518,7 @@ public class MainShellController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (!verificarBotoesSemestres()) {return;}
     }
 
     private void criarPrimeiroCalendario() {
