@@ -6,6 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import org.example.demo3.UsuarioAtual;
+import org.example.demo3.audit.AcaoAuditoria;
+import org.example.demo3.audit.AuditoriaService;
 import org.example.demo3.dao.DependenciaTemaDAO;
 import org.example.demo3.dao.SemestreLetivoDAO;
 import org.example.demo3.dao.TemaDAO;
@@ -231,12 +233,16 @@ public class ProfTemasController {
             if (modoEdicao()) {
                 tema.setId_tema(temaSelecionado.getId_tema());
                 temaDAO.editarTema(tema);
+                AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                        "editou o Tema \"" + tema.getNome() + "\"");
                 temaSelecionado = tema;
                 lblFeedbackTema.setText("Tema atualizado com sucesso!");
                 exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Tema alterado com sucesso.");
             } else {
                 Integer idGerado = temaDAO.inserirTemaRetornandoId(tema);
                 tema.setId_tema(idGerado);
+                AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                        "criou o Tema \"" + tema.getNome() + "\"");
                 temaSelecionado = tema;
                 lblFeedbackTema.setText("Tema salvo com sucesso!");
                 exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Tema salvo com sucesso.");
@@ -295,6 +301,8 @@ public class ProfTemasController {
             try {
                 dependenciaTemaDAO.deletarDependenciasPorTema(tema.getId_tema());
                 temaDAO.excluirTema(tema.getId_tema());
+                AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                        "removeu o Tema \"" + tema.getNome() + "\"");
 
                 if (temaSelecionado != null
                         && temaSelecionado.getId_tema().equals(tema.getId_tema())) {
@@ -592,6 +600,12 @@ public class ProfTemasController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        if (importados > 0) {
+            AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                    "importou " + importados + " tema(s) do semestre \""
+                            + converter.toString(semestreOrigem) + "\"");
         }
 
         //ATUALIZA A TABELA E MOSTRA A MENSAGEM
