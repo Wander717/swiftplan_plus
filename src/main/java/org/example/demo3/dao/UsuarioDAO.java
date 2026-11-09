@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UsuarioDAO {
+    private static final Logger log = LoggerFactory.getLogger(UsuarioDAO.class);
 
     public UsuarioDAO() {}
 
@@ -53,7 +56,7 @@ public class UsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao buscar usuário por e-mail: " + e.getMessage());
+            log.error("Erro ao buscar usuário por e-mail: " + e.getMessage());
             throw e;
         }
         return null;
@@ -107,7 +110,7 @@ public class UsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar coordenadores: " + e.getMessage());
+            log.error("Erro ao listar coordenadores: " + e.getMessage());
             throw e;
         }
 
@@ -140,7 +143,7 @@ public class UsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar professores: " + e.getMessage());
+            log.error("Erro ao listar professores: " + e.getMessage());
             throw e;
         }
 
@@ -172,7 +175,7 @@ public class UsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao listar professores: " + e.getMessage());
+            log.error("Erro ao listar professores: " + e.getMessage());
         }
 
         return usuarios;
@@ -233,7 +236,7 @@ public class UsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar professores do curso: " + e.getMessage());
+            log.error("Erro ao listar professores do curso: " + e.getMessage());
             throw e;
         }
 
@@ -255,10 +258,10 @@ public class UsuarioDAO {
             stmt.setDate(4, Date.valueOf(usuario.getCriado_em()));
             stmt.executeUpdate();
 
-            System.out.println("Usuário inserido com sucesso!");
+            log.info("Usuário inserido com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir usuário: " + e.getMessage());
+            log.error("Erro ao inserir usuário: " + e.getMessage());
         }
     }
 
@@ -282,7 +285,7 @@ public class UsuarioDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir usuário: " + e.getMessage());
+            log.error("Erro ao inserir usuário: " + e.getMessage());
         }
         return -1;
     }
@@ -310,7 +313,7 @@ public class UsuarioDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar usuários: " + e.getMessage());
+            log.error("Erro ao listar usuários: " + e.getMessage());
         }
 
         return usuarios;
@@ -335,10 +338,10 @@ public class UsuarioDAO {
             stmt.setInt(4, usuario.getId_usuario());
             stmt.executeUpdate();
 
-            System.out.println("Usuário editado com sucesso!");
+            log.info("Usuário editado com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao editar usuário: " + e.getMessage());
+            log.error("Erro ao editar usuário: " + e.getMessage());
         }
     }
 
@@ -355,10 +358,10 @@ public class UsuarioDAO {
             stmt.setInt(1, idUsuario);
             stmt.executeUpdate();
 
-            System.out.println("Usuário excluído com sucesso!");
+            log.info("Usuário excluído com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao excluir usuário: " + e.getMessage());
+            log.error("Erro ao excluir usuário: " + e.getMessage());
         }
     }
 
@@ -383,7 +386,7 @@ public class UsuarioDAO {
             ps.setInt(1, idUsuario);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Erro ao restaurar usuário: " + e.getMessage());
+            log.error("Erro ao restaurar usuário: " + e.getMessage());
         }
     }
 

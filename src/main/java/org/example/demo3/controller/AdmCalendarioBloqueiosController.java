@@ -32,8 +32,11 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AdmCalendarioBloqueiosController {
+    private static final Logger log = LoggerFactory.getLogger(AdmCalendarioBloqueiosController.class);
 
     @FXML private DatePicker dpInicioSemestre;
     @FXML private DatePicker dpFimSemestre;
@@ -112,7 +115,7 @@ public class AdmCalendarioBloqueiosController {
 
         logado.anoProperty().addListener((obs, oldVal, newVal) ->{
             if (newVal != null) {
-                System.out.println("Ano: "+newVal);
+                log.info("Ano: "+newVal);
                 this.anoSelecionado = newVal;
                 atualizarSemestreAtual(anoSelecionado, anoSemestreSelecionado);
             };
@@ -120,7 +123,7 @@ public class AdmCalendarioBloqueiosController {
 
         logado.anoSemestreProperty().addListener((obs, oldVal, newVal) ->{
             if (newVal != null) {
-                System.out.println("AnoSemestre: "+newVal);
+                log.info("AnoSemestre: "+newVal);
                 this.anoSemestreSelecionado = newVal;
                 atualizarSemestreAtual(anoSelecionado, anoSemestreSelecionado);
             };
@@ -153,7 +156,7 @@ public class AdmCalendarioBloqueiosController {
             idSemestreAtual = slDao.getIdSemestreLetivo(ano, anoSemestre);
             slAtual = slDao.listarSLPorId(idSemestreAtual);
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -407,7 +410,7 @@ public class AdmCalendarioBloqueiosController {
 
             linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -422,7 +425,7 @@ public class AdmCalendarioBloqueiosController {
 
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -433,7 +436,7 @@ public class AdmCalendarioBloqueiosController {
 
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
 
@@ -469,7 +472,7 @@ public class AdmCalendarioBloqueiosController {
             linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -485,7 +488,7 @@ public class AdmCalendarioBloqueiosController {
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -558,7 +561,7 @@ public class AdmCalendarioBloqueiosController {
             }
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -571,7 +574,7 @@ public class AdmCalendarioBloqueiosController {
             linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -585,7 +588,7 @@ public class AdmCalendarioBloqueiosController {
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -711,7 +714,7 @@ public class AdmCalendarioBloqueiosController {
     }
 
     public void selecionarBotoesFeriadoMotivoIgual(LocalDate dataBtnPressionado){
-        System.out.println("ENTROU EM 'selecionarBotoesFeriadoMotivoIgual'");
+        log.info("ENTROU EM 'selecionarBotoesFeriadoMotivoIgual'");
         try{
             String motivo = databDao.recuperarMotivoData(dataBtnPressionado, idSemestreAtual);
             List<LocalDate> datasMotivoIgual = databDao.listarDatasMotivoComumSL(idSemestreAtual, motivo);
@@ -722,7 +725,7 @@ public class AdmCalendarioBloqueiosController {
 
             preencherDadosConfigCancelamentoFeriado(motivo);
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -736,9 +739,9 @@ public class AdmCalendarioBloqueiosController {
                 .filter(lambdaCadm -> motivo.equals(lambdaCadm.getMotivo()))
                 .toList();
 
-        System.out.println("\n\nLIST FILTRO INICIAL: ");
+        log.info("\n\nLIST FILTRO INICIAL: ");
         for (CancelamentoAdm c : listCAdmFiltroInicial){
-            System.out.println("DATA: "+c.getData());
+            log.info("DATA: "+c.getData());
         }
 
         List<CancelamentoAdmHorario> listCadmH = cancelamentoAdmHDAO.
@@ -749,9 +752,9 @@ public class AdmCalendarioBloqueiosController {
                 .map(CancelamentoAdmHorario::getHorario_curso_id)
                 .collect(Collectors.toSet());
 
-        System.out.println("\n\nLIST IDS HORARIO BOTAO INICIAL: ");
+        log.info("\n\nLIST IDS HORARIO BOTAO INICIAL: ");
         for (Integer c : idsHorarioCursoPrimeiroSelecionado){
-            System.out.println("ID: "+c);
+            log.info("ID: "+c);
         }
 
         Set<Integer> idsCancelamentosCompartilhados = listCadmH.stream()
@@ -764,18 +767,18 @@ public class AdmCalendarioBloqueiosController {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
 
-        System.out.println("\n\nLIST IDS CADM: ");
+        log.info("\n\nLIST IDS CADM: ");
         for (Integer c : idsCancelamentosCompartilhados){
-            System.out.println("ID: "+c);
+            log.info("ID: "+c);
         }
 
         List<CancelamentoAdm> listCAdmFiltroFinal = listCAdmFiltroInicial.stream()
                 .filter(ca -> idsCancelamentosCompartilhados.contains(ca.getId_cancelamento_adm()))
                 .toList();
 
-        System.out.println("\n\nLIST FINAL: ");
+        log.info("\n\nLIST FINAL: ");
         for (CancelamentoAdm c : listCAdmFiltroFinal){
-            System.out.println("DATA: "+c.getData());
+            log.info("DATA: "+c.getData());
         }
 
         Set<LocalDate> datasSelecionadasFinais = listCAdmFiltroFinal.stream()
@@ -799,7 +802,7 @@ public class AdmCalendarioBloqueiosController {
     }
 
     public void selecionarBotoesCancelamentoMotivoIgual(LocalDate dataBtnPressionado){
-        System.out.println("\n\nENTROU EM 'selecionarBotoesCancelamentoMotivoIgual'");
+        log.info("\n\nENTROU EM 'selecionarBotoesCancelamentoMotivoIgual'");
         try{
             CancelamentoAdm cadm = cancelamentoDAO.recuperarCancelamentoAdm(dataBtnPressionado, idSemestreAtual);
             List<LocalDate> datasFiltradas;
@@ -809,7 +812,7 @@ public class AdmCalendarioBloqueiosController {
             if (cadm.getDia_inteiro() != true){
                 selecionarBotoesCancelamentoMotivoHorariosIgual(cadm);
             } else {
-                System.out.println("MOTIVO DO botao "+ dataBtnPressionado+": "+motivo);
+                log.info("MOTIVO DO botao "+ dataBtnPressionado+": "+motivo);
                 datasFiltradas = linhasCancelamentoAdmRecuperadoBanco.stream()
                         .filter(lambdaCadm -> motivo.equals(lambdaCadm.getMotivo()))
                         .map(CancelamentoAdm::getData)
@@ -823,7 +826,7 @@ public class AdmCalendarioBloqueiosController {
             }
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -1109,7 +1112,7 @@ public class AdmCalendarioBloqueiosController {
                 }
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -1348,7 +1351,7 @@ public class AdmCalendarioBloqueiosController {
                 removerCancelamentoPorTipo(TipoCancelamento.HORARIO, tfMotivoCancelamento.getText());
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         resetarDadosConfigCancelamento();

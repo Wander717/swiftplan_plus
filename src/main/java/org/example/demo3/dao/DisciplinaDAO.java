@@ -6,8 +6,11 @@ import org.example.demo3.entity.Disciplina;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DisciplinaDAO {
+    private static final Logger log = LoggerFactory.getLogger(DisciplinaDAO.class);
 
     public Disciplina recuperarDisciplinaPorId(Integer id) throws SQLException{
         String sql = "SELECT * FROM disciplina WHERE id_disciplina = ?";
@@ -33,7 +36,7 @@ public class DisciplinaDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar disciplinas: " + e.getMessage());
+            log.error("Erro ao listar disciplinas: " + e.getMessage());
         }
 
         return null;
@@ -62,10 +65,10 @@ public class DisciplinaDAO {
                     ? Timestamp.valueOf(disciplina.getDeletado_em()) : null);
 
             stmt.executeUpdate();
-            System.out.println("Disciplina inserida com sucesso!");
+            log.info("Disciplina inserida com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir disciplina: " + e.getMessage());
+            log.error("Erro ao inserir disciplina: " + e.getMessage());
         }
     }
 
@@ -99,7 +102,7 @@ public class DisciplinaDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir disciplina: " + e.getMessage());
+            log.error("Erro ao inserir disciplina: " + e.getMessage());
         }
         return null;
     }
@@ -128,7 +131,7 @@ public class DisciplinaDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar disciplinas: " + e.getMessage());
+            log.error("Erro ao listar disciplinas: " + e.getMessage());
         }
 
         return disciplinas;
@@ -170,7 +173,7 @@ public class DisciplinaDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao listar disciplinas do curso: " + e.getMessage());
+            log.error("Erro ao listar disciplinas do curso: " + e.getMessage());
             throw e;
         }
 
@@ -201,10 +204,10 @@ public class DisciplinaDAO {
             stmt.setInt(6, disciplina.getId_disciplina());
 
             stmt.executeUpdate();
-            System.out.println("Disciplina updated com sucesso!");
+            log.info("Disciplina updated com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao atualizar disciplina: " + e.getMessage());
+            log.error("Erro ao atualizar disciplina: " + e.getMessage());
         }
     }
 
@@ -221,10 +224,10 @@ public class DisciplinaDAO {
 
             stmt.setInt(1, idDisciplina);
             stmt.executeUpdate();
-            System.out.println("Disciplina removida com sucesso!");
+            log.info("Disciplina removida com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao remover disciplina: " + e.getMessage());
+            log.error("Erro ao remover disciplina: " + e.getMessage());
         }
     }
 
@@ -242,7 +245,7 @@ public class DisciplinaDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao descobrir ID da disciplina por nome: " + e.getMessage());
+            log.error("Erro ao descobrir ID da disciplina por nome: " + e.getMessage());
             throw e;
         }
         return 0;
@@ -276,7 +279,7 @@ public class DisciplinaDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao listar disciplinas por curso: " + e.getMessage());
+            log.error("Erro ao listar disciplinas por curso: " + e.getMessage());
             throw e;
         }
 
@@ -315,7 +318,7 @@ public class DisciplinaDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao listar disciplinas por curso: " + e.getMessage());
+            log.error("Erro ao listar disciplinas por curso: " + e.getMessage());
             throw e;
         }
 

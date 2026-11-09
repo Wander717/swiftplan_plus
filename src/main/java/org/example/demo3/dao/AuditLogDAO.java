@@ -11,8 +11,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AuditLogDAO {
+    private static final Logger log = LoggerFactory.getLogger(AuditLogDAO.class);
 
     // OBTÉM A CONEXÃO OU FALHA DE FORMA CONTROLADA
     // DatabaseConnection.getConnection() devolve null quando não há banco disponível.
@@ -60,21 +63,21 @@ public class AuditLogDAO {
             ps.setInt(1, limite);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    AuditLog log = new AuditLog();
-                    log.setId_audit_log(rs.getInt("id_audit_log"));
+                    AuditLog registro = new AuditLog();
+                    registro.setId_audit_log(rs.getInt("id_audit_log"));
                     int usuarioId = rs.getInt("usuario_id");
-                    log.setUsuario_id(rs.wasNull() ? null : usuarioId);
-                    log.setUsuario_nome(rs.getString("usuario_nome"));
-                    log.setTipo_usuario(rs.getString("tipo_usuario"));
-                    log.setAcao(AcaoAuditoria.valueOf(rs.getString("acao")));
-                    log.setDescricao(rs.getString("descricao"));
+                    registro.setUsuario_id(rs.wasNull() ? null : usuarioId);
+                    registro.setUsuario_nome(rs.getString("usuario_nome"));
+                    registro.setTipo_usuario(rs.getString("tipo_usuario"));
+                    registro.setAcao(AcaoAuditoria.valueOf(rs.getString("acao")));
+                    registro.setDescricao(rs.getString("descricao"));
                     Timestamp ts = rs.getTimestamp("data_hora");
-                    log.setData_hora(ts == null ? null : ts.toLocalDateTime());
-                    registros.add(log);
+                    registro.setData_hora(ts == null ? null : ts.toLocalDateTime());
+                    registros.add(registro);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar auditoria: " + e.getMessage());
+            log.error("Erro ao listar auditoria: " + e.getMessage());
         }
         return registros;
     }

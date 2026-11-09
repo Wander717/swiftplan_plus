@@ -19,8 +19,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProfTemasController {
+    private static final Logger log = LoggerFactory.getLogger(ProfTemasController.class);
 
     // -------------------------------------------------------------------------
     // FXML — TABELA
@@ -86,7 +89,7 @@ public class ProfTemasController {
                 SemestreLetivoDAO slDao = new SemestreLetivoDAO();
                 this.idSemestreAtual = slDao.getIdSemestreLetivo(this.anoAtual, this.anoSemestre);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
         // ────────────────────────────────────────────────────────────────────────────
@@ -134,7 +137,7 @@ public class ProfTemasController {
                 SemestreLetivoDAO slDao = new SemestreLetivoDAO();
                 this.idSemestreAtual = slDao.getIdSemestreLetivo(this.anoAtual, this.anoSemestre);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
 
@@ -215,7 +218,7 @@ public class ProfTemasController {
 
     @FXML
     private void handleSalvarTema() {
-        System.out.println("id:"+idDisciplinaAtual);
+        log.info("id:"+idDisciplinaAtual);
         if (tfTemaNome.getText().isBlank()) {
             errTemaNome.setText("Digite o nome do tema.");
             exibirAlerta(Alert.AlertType.ERROR, "Erro", "Preencha todos os campos.");
@@ -256,7 +259,7 @@ public class ProfTemasController {
         } catch (Exception e) {
             lblFeedbackTema.setText("Erro ao salvar tema.");
             exibirAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao salvar tema.");
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -315,7 +318,7 @@ public class ProfTemasController {
 
             } catch (Exception e) {
                 exibirAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao excluir o tema.");
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             }
         });
     }
@@ -371,7 +374,7 @@ public class ProfTemasController {
         } catch (Exception e) {
             lblFeedbackTema.setText("Erro ao salvar dependências.");
             exibirAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao salvar dependência(s).");
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -431,9 +434,9 @@ public class ProfTemasController {
     }
 
     private void atualizarPainelDependencias() {
-        System.out.println("Semestre letivo: "+idSemestreAtual);
-        System.out.println("Disciplina : "+idDisciplinaAtual);
-        System.out.println("Tema: "+temaSelecionado.getId_tema());
+        log.info("Semestre letivo: "+idSemestreAtual);
+        log.info("Disciplina : "+idDisciplinaAtual);
+        log.info("Tema: "+temaSelecionado.getId_tema());
         listTemasDisponiveis.getItems().clear();
         listDependencias    .getItems().clear();
 
@@ -520,7 +523,7 @@ public class ProfTemasController {
 
         } catch (SQLException e) {
             exibirAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao carregar semestres letivos.");
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             return;
         }
 
@@ -598,7 +601,7 @@ public class ProfTemasController {
                 temaDAO.inserirTemaRetornandoId(novo);
                 importados++;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
 

@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlanejamentoDAO {
+    private static final Logger log = LoggerFactory.getLogger(PlanejamentoDAO.class);
 
     public Integer buscarOuCriarPlanejamento(Integer idAtribuicao) {
         String sqlBusca = """
@@ -45,7 +48,7 @@ public class PlanejamentoDAO {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return null;
@@ -95,7 +98,7 @@ public class PlanejamentoDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             DatabaseConnection.closeConnection();
         }
@@ -126,10 +129,10 @@ public class PlanejamentoDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Planejamento inserido com sucesso!");
+            log.info("Planejamento inserido com sucesso!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -156,7 +159,7 @@ public class PlanejamentoDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return lista;
@@ -186,7 +189,7 @@ public class PlanejamentoDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return null;
@@ -208,7 +211,7 @@ public class PlanejamentoDAO {
                 if (rs.next()) return rs.getInt(1) > 0;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         return false;
     }
@@ -232,10 +235,10 @@ public class PlanejamentoDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Planejamento atualizado!");
+            log.info("Planejamento atualizado!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -251,10 +254,10 @@ public class PlanejamentoDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Planejamento deletado!");
+            log.info("Planejamento deletado!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 }

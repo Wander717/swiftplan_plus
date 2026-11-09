@@ -4,6 +4,8 @@ import org.example.demo3.UsuarioAtual;
 import org.example.demo3.dao.AuditLogDAO;
 
 import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Registra no banco as ações realizadas pelo usuário logado.
@@ -15,6 +17,7 @@ import java.sql.SQLException;
  * Falhas de auditoria nunca interrompem a operação principal: são apenas reportadas.
  */
 public final class AuditoriaService {
+    private static final Logger log = LoggerFactory.getLogger(AuditoriaService.class);
 
     private static final AuditLogDAO dao = new AuditLogDAO();
 
@@ -27,7 +30,7 @@ public final class AuditoriaService {
 
         if (usuarioId == null) {
             // Sem usuário logado não há quem registrar; a ação não é auditada.
-            System.err.println("Auditoria ignorada (nenhum usuário logado): " + descricao);
+            log.warn("Auditoria ignorada (nenhum usuário logado): " + descricao);
             return;
         }
 
@@ -35,7 +38,7 @@ public final class AuditoriaService {
             dao.inserir(usuarioId, sessao.getTipo(), acao, descricao);
         } catch (SQLException | RuntimeException e) {
             // RuntimeException também é capturada: a auditoria nunca pode quebrar a operação principal.
-            System.err.println("Falha ao registrar auditoria: " + e.getMessage());
+            log.error("Falha ao registrar auditoria: " + e.getMessage());
         }
     }
 }

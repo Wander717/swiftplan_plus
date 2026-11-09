@@ -12,8 +12,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HorarioCursoDAO {
+    private static final Logger log = LoggerFactory.getLogger(HorarioCursoDAO.class);
 
     public List<HorarioCurso> listarHorariosPorAtribuicaoDSemana
             (Integer idAtribuicao, Integer diaSemana) throws SQLException{
@@ -141,13 +144,13 @@ public class HorarioCursoDAO {
                         listaHC.add(hc);
                     }
                 } catch (SQLException e){
-                    e.printStackTrace();
+                    log.error("Erro inesperado: {}", e.getMessage(), e);
                 }
             }
 
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         return listaHC;
     }
@@ -181,7 +184,7 @@ public class HorarioCursoDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("\n\nErro ao listar horario_curso 'listarHorarioCursoPorIds': " + e.getMessage());
+            log.error("\n\nErro ao listar horario_curso 'listarHorarioCursoPorIds': " + e.getMessage());
         }
         return listHc;
     }
@@ -244,7 +247,7 @@ public class HorarioCursoDAO {
             }
 
         } catch (SQLException e){
-            System.err.println("Erro ao listar Horarios 'listarHorarioCursoPorHoraInicio': "+e.getMessage());
+            log.error("Erro ao listar Horarios 'listarHorarioCursoPorHoraInicio': "+e.getMessage());
         }
         return listaHorarioCurso;
     }
@@ -292,10 +295,10 @@ public class HorarioCursoDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Horário inserido!");
+            log.info("Horário inserido!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -326,7 +329,7 @@ public class HorarioCursoDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return lista;
@@ -360,7 +363,7 @@ public class HorarioCursoDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return null;
@@ -393,10 +396,10 @@ public class HorarioCursoDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Horário atualizado!");
+            log.info("Horário atualizado!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -412,10 +415,10 @@ public class HorarioCursoDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Horário deletado!");
+            log.info("Horário deletado!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 

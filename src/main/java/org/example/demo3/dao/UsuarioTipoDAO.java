@@ -6,8 +6,11 @@ import org.example.demo3.entity.UsuarioTipo;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UsuarioTipoDAO {
+    private static final Logger log = LoggerFactory.getLogger(UsuarioTipoDAO.class);
 
     public UsuarioTipoDAO() {
     }
@@ -44,13 +47,13 @@ public class UsuarioTipoDAO {
             ps.setString(2, usuarioTipo.getTipo());
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             try {
                 if (ps != null) ps.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
     }
@@ -74,14 +77,14 @@ public class UsuarioTipoDAO {
                 usuariosTipo.add(ut);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
         return usuariosTipo;
@@ -99,13 +102,13 @@ public class UsuarioTipoDAO {
             ps.setString(2, tipo);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             try {
                 if (ps != null) ps.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
     }
@@ -128,7 +131,7 @@ public class UsuarioTipoDAO {
                 return rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             return false;
         }
     }
@@ -145,13 +148,13 @@ public class UsuarioTipoDAO {
             ps.setInt(1, usuarioId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             try {
                 if (ps != null) ps.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
     }
@@ -188,7 +191,7 @@ public class UsuarioTipoDAO {
                 connection.setAutoCommit(true);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 }

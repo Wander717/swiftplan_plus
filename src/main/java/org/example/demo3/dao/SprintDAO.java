@@ -7,8 +7,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SprintDAO {
+    private static final Logger log = LoggerFactory.getLogger(SprintDAO.class);
 
     public List<Sprint> listarPorSemestre(Integer idSemestreLetivo) {
         String sql = """
@@ -38,7 +41,7 @@ public class SprintDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return sprints;
@@ -90,7 +93,7 @@ public class SprintDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar sprints: " + e.getMessage());
+            log.error("Erro ao listar sprints: " + e.getMessage());
         }
 
         return sprints;
@@ -119,10 +122,10 @@ public class SprintDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Sprint updated com sucesso!");
+            log.info("Sprint updated com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao atualizar sprint: " + e.getMessage());
+            log.error("Erro ao atualizar sprint: " + e.getMessage());
         }
     }
 
@@ -139,10 +142,10 @@ public class SprintDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Sprint removida com sucesso!");
+            log.info("Sprint removida com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao remover sprint: " + e.getMessage());
+            log.error("Erro ao remover sprint: " + e.getMessage());
         }
     }
 
@@ -214,7 +217,7 @@ public class SprintDAO {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao buscar sprints por semestre: " + e.getMessage());
+            log.error("Erro ao buscar sprints por semestre: " + e.getMessage());
         }
         return sprints;
     }

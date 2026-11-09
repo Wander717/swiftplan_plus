@@ -3,8 +3,11 @@ package org.example.demo3;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseConnection {
+    private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
 
     private static final String URL = ConfigDB.getUrl()+ConfigDB.getName();
     private static final String USER = ConfigDB.getUsername();
@@ -23,15 +26,15 @@ public class DatabaseConnection {
                 String password = ConfigDB.getPassword();
 
                 // Log preventivo para você verificar se os dados deixaram de ser null
-                System.out.println("Tentando conectar em: " + url + " com o usuário: " + user);
+                log.info("Tentando conectar em: " + url + " com o usuário: " + user);
 
                 connection = DriverManager.getConnection(url, user, password);
-                System.out.println("Conexão estabelecida com sucesso!");
+                log.info("Conexão estabelecida com sucesso!");
             }
         } catch (ClassNotFoundException e) {
-            System.err.println("Driver MySQL não encontrado: " + e.getMessage());
+            log.error("Driver MySQL não encontrado: " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("Erro ao conectar ao banco: " + e.getMessage());
+            log.error("Erro ao conectar ao banco: " + e.getMessage());
         }
         return connection;
     }
@@ -40,10 +43,10 @@ public class DatabaseConnection {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                System.out.println("Conexão fechada.");
+                log.info("Conexão fechada.");
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao fechar conexão: " + e.getMessage());
+            log.error("Erro ao fechar conexão: " + e.getMessage());
         }
     }
 }

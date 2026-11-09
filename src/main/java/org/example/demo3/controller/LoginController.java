@@ -20,8 +20,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoginController {
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     // Ajustado para bater com o fx:id do FXML
     @FXML private TextField loginEmail;
@@ -46,7 +49,7 @@ public class LoginController {
                 primeiroAcessoPane.setManaged(true);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -81,7 +84,7 @@ public class LoginController {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             exibirAlerta("Erro no Banco", "Falha ao consultar o banco de dados.");
         }
     }
@@ -98,7 +101,7 @@ public class LoginController {
             stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             exibirAlerta("Erro de Carregamento", "Não foi possível abrir o painel principal.");
         }
     }
@@ -158,7 +161,7 @@ public class LoginController {
                 exibirAlertaSucesso("Sucesso", "Administrador cadastrado com sucesso!");
                 abrirMainShell();
             } catch (SQLException e){
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
     }

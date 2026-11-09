@@ -27,8 +27,11 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CoordPainelController {
+    private static final Logger log = LoggerFactory.getLogger(CoordPainelController.class);
 
     // ════════════════════════════════════════════════════════════════════════
     // CAMPOS FXML — ABA 1: DISCIPLINAS
@@ -259,7 +262,7 @@ public class CoordPainelController {
 
         } catch (Exception e) {
             exibirAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao salvar a disciplina:\n" + e.getMessage());
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -289,7 +292,7 @@ public class CoordPainelController {
 
             } catch (Exception e) {
                 exibirAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao excluir a disciplina.");
-                System.err.println(e.getMessage());
+                log.error(e.getMessage());
             }
         });
     }
@@ -347,7 +350,7 @@ public class CoordPainelController {
                     disciplinaDAO.listarDisciplinasPorCurso(idCursoAtual)
             );
         } catch (SQLException e) {
-            System.err.println("Erro ao carregar disciplinas: " + e.getMessage());
+            log.error("Erro ao carregar disciplinas: " + e.getMessage());
         }
         preencherComboBoxSemestres();
     }
@@ -361,7 +364,7 @@ public class CoordPainelController {
                 cbDiscSemestreCurso.getItems().add(i);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao buscar semestres do curso: " + e.getMessage());
+            log.error("Erro ao buscar semestres do curso: " + e.getMessage());
         }
     }
 
@@ -489,7 +492,7 @@ public class CoordPainelController {
                         carregarGrade();
 
                     } catch (SQLException e) {
-                        System.err.println("Erro ao recarregar combo: " + e.getMessage());
+                        log.error("Erro ao recarregar combo: " + e.getMessage());
                     }
                     tabPanePrincipal.getSelectionModel().select(tabAtribuicoes);
 
@@ -508,7 +511,7 @@ public class CoordPainelController {
                                         ap.getId_atribuicao_professor());
                             }
                         } catch (SQLException ex) {
-                            ex.printStackTrace();
+                            log.error("Erro inesperado: {}", ex.getMessage(), ex);
                         }
                     }
                     recarregarTabelaProfessores();
@@ -521,7 +524,7 @@ public class CoordPainelController {
         } catch (Exception e) {
             exibirAlerta(Alert.AlertType.ERROR, "Erro",
                     "Falha ao processar auto-atribuição:\n" + e.getMessage());
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -538,7 +541,7 @@ public class CoordPainelController {
             avisoEmailDup.setVisible(existe);
             avisoEmailDup.setManaged(existe);
         } catch (SQLException e) {
-            System.err.println("Erro ao verificar e-mail: " + e.getMessage());
+            log.error("Erro ao verificar e-mail: " + e.getMessage());
         }
     }
 
@@ -633,7 +636,7 @@ public class CoordPainelController {
                             carregarGrade();                                                   // ← ADICIONADO
 
                         } catch (SQLException e) {
-                            System.err.println("Erro ao recarregar combo: " + e.getMessage());
+                            log.error("Erro ao recarregar combo: " + e.getMessage());
                         }
                         tabPanePrincipal.getSelectionModel().select(tabAtribuicoes);
                     } else {
@@ -649,7 +652,7 @@ public class CoordPainelController {
         } catch (Exception e) {
             exibirAlerta(Alert.AlertType.ERROR, "Erro",
                     "Falha ao salvar o professor:\n" + e.getMessage());
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -667,7 +670,7 @@ public class CoordPainelController {
                     usuarioDAO.listarTodosProfessores()
             );
         } catch (SQLException e) {
-            System.err.println("Erro ao recarregar tabela de professores: " + e.getMessage());
+            log.error("Erro ao recarregar tabela de professores: " + e.getMessage());
         }
     }
 
@@ -733,8 +736,8 @@ public class CoordPainelController {
 
             } catch (Exception e) {
                 exibirAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao excluir professor.");
-                System.err.println(e.getMessage());
-                e.printStackTrace();
+                log.error(e.getMessage());
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         });
     }
@@ -863,7 +866,7 @@ public class CoordPainelController {
         } catch (SQLException e) {
             exibirAlerta(Alert.AlertType.ERROR, "Erro",
                     "Falha ao salvar atribuição:\n" + e.getMessage());
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -876,7 +879,7 @@ public class CoordPainelController {
             tabelaDisciplinas.getItems().setAll(disciplinas);
             cbAtribDisc.getItems().setAll(disciplinas);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
     private void recarregarProfessoresUI() {                          // ← CORRIGIDO
@@ -885,7 +888,7 @@ public class CoordPainelController {
             tabelaProfessores.getItems().setAll(profs);
             cbAtribProf.getItems().setAll(profs);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -910,7 +913,7 @@ public class CoordPainelController {
             cbAtribDisc.setOnAction(e -> carregarGrade());
 
         } catch (SQLException e) {
-            System.err.println("Erro ao configurar aba de atribuições: " + e.getMessage());
+            log.error("Erro ao configurar aba de atribuições: " + e.getMessage());
         }
     }
 
@@ -1028,7 +1031,7 @@ public class CoordPainelController {
             atualizarBotaoSalvar();
 
         } catch (SQLException e) {
-            System.err.println("Erro ao carregar grade: " + e.getMessage());
+            log.error("Erro ao carregar grade: " + e.getMessage());
         }
     }
 
@@ -1080,7 +1083,7 @@ public class CoordPainelController {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao verificar conflito: " + e.getMessage());
+            log.error("Erro ao verificar conflito: " + e.getMessage());
         }
     }
 
@@ -1152,7 +1155,7 @@ public class CoordPainelController {
                         lblAvisoCargaInsuficiente, chartStatusAulas);
             }
         } catch (Exception e) {
-            System.err.println("Aviso: Falha na varredura de componentes: " + e.getMessage());
+            log.error("Aviso: Falha na varredura de componentes: " + e.getMessage());
         }
     }
 
@@ -1204,7 +1207,7 @@ public class CoordPainelController {
                     listaProfessoresEsquerda.getSelectionModel().selectFirst();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
 
@@ -1218,11 +1221,11 @@ public class CoordPainelController {
             TreeItem<Object> rootNode = new TreeItem<>(professor.getNome());
             rootNode.setExpanded(true);
 
-            System.out.println("PROFESSOR SELECIONADO: "+professorSelecionado);
+            log.info("PROFESSOR SELECIONADO: "+professorSelecionado);
             this.professorSelecionado = usuarioDAO.buscarUsuarioPorEmailUnico(professor.getEmail());
 
             if (this.professorSelecionado == null) {
-                System.err.println("Erro: Professor não encontrado no banco pelo email: " + professor.getEmail());
+                log.error("Erro: Professor não encontrado no banco pelo email: " + professor.getEmail());
                 return;
             }
 
@@ -1281,7 +1284,7 @@ public class CoordPainelController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -1362,7 +1365,7 @@ public class CoordPainelController {
                 chartStatusAulas.setData(fatias);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 

@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CancelamentoAdmDAO {
+    private static final Logger log = LoggerFactory.getLogger(CancelamentoAdmDAO.class);
 
     public List<CancelamentoAdm> listarCancelamentos(Integer semestre_letivo_id) throws SQLException {
         String sql = "SELECT * FROM cancelamento_adm WHERE semestre_letivo_id = ? AND deletado_em IS NULL ORDER BY criado_em ASC";
@@ -40,7 +43,7 @@ public class CancelamentoAdmDAO {
                 lista.add(c);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar cancelamentos: " + e.getMessage());
+            log.error("Erro ao listar cancelamentos: " + e.getMessage());
             throw e;
         } finally {
             DatabaseConnection.closeConnection();
@@ -79,7 +82,7 @@ public class CancelamentoAdmDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         return cancelamentos;
     }
@@ -123,7 +126,7 @@ public class CancelamentoAdmDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         return null; // Retorna null se não encontrar o registro exato
     }
@@ -150,7 +153,7 @@ public class CancelamentoAdmDAO {
             conn.commit();
 
         } catch (SQLException e) {
-            System.err.println("Erro ao atualizar lote de cancelamentos dia_inteiro bloqueadas: " + e.getMessage());
+            log.error("Erro ao atualizar lote de cancelamentos dia_inteiro bloqueadas: " + e.getMessage());
             throw e;
         }
     }
@@ -180,7 +183,7 @@ public class CancelamentoAdmDAO {
                 return cadm;
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao listar datas bloqueadas: " + e.getMessage());
             throw e;
         }
         return null;
@@ -211,7 +214,7 @@ public class CancelamentoAdmDAO {
                 listCadm.add(cadm);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao listar datas bloqueadas: " + e.getMessage());
         }
         return listCadm;
     }
@@ -232,7 +235,7 @@ public class CancelamentoAdmDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         return datas;
     }
@@ -253,7 +256,7 @@ public class CancelamentoAdmDAO {
                 listaDatas.add(rs.getObject("data", LocalDate.class));
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao listar datas bloqueadas: " + e.getMessage());
             throw e;
         }
         return listaDatas;
@@ -280,7 +283,7 @@ public class CancelamentoAdmDAO {
 
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Erro ao salvar cancelamento: " + e.getMessage());
+            log.error("Erro ao salvar cancelamento: " + e.getMessage());
             throw e;
         } finally {
             DatabaseConnection.closeConnection();
@@ -344,7 +347,7 @@ public class CancelamentoAdmDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao salvar cancelamento Adm em cadeia: " + e.getMessage());
+            log.error("Erro ao salvar cancelamento Adm em cadeia: " + e.getMessage());
             throw e;
         }
     }
@@ -372,7 +375,7 @@ public class CancelamentoAdmDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao excluir (soft_delete) cadm em lote: " + e.getMessage());
+            log.error("Erro ao excluir (soft_delete) cadm em lote: " + e.getMessage());
             throw e;
         }
     }
@@ -406,7 +409,7 @@ public class CancelamentoAdmDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return resultado;

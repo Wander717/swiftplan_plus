@@ -8,8 +8,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TemaDAO {
+    private static final Logger log = LoggerFactory.getLogger(TemaDAO.class);
 
         //INSERE UM TEMA
     public Integer inserirTemaRetornandoId(Tema tema) {
@@ -35,7 +38,7 @@ public class TemaDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -67,7 +70,7 @@ public class TemaDAO {
                         temas.add(tema);
                     }
                 }catch (SQLException e) {
-                    System.out.println("Erro ao listar temas: " + e.getMessage());
+                    log.error("Erro ao listar temas: " + e.getMessage());
                 }
 
                 return temas;
@@ -100,7 +103,7 @@ public class TemaDAO {
                     }
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
             return lista;
         }
@@ -142,11 +145,11 @@ public class TemaDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Tema editado com sucesso!");
+            log.info("Tema editado com sucesso!");
 
         } catch (SQLException e) {
 
-            System.out.println(
+            log.info(
                     "Erro ao editar tema: "
                             + e.getMessage()
             );
@@ -204,10 +207,10 @@ public class TemaDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("Tema excluído com sucesso!");
+            log.info("Tema excluído com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao excluir tema: " + e.getMessage());
+            log.error("Erro ao excluir tema: " + e.getMessage());
         }
     }
 

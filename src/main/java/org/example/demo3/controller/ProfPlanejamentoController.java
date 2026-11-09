@@ -20,8 +20,11 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProfPlanejamentoController {
+    private static final Logger log = LoggerFactory.getLogger(ProfPlanejamentoController.class);
 
     @FXML private Label lblTotalTemas;
     @FXML private Label lblAulasGeradas;
@@ -75,7 +78,7 @@ public class ProfPlanejamentoController {
         treePlanejamento.setCellFactory(CheckBoxTreeCell.forTreeView());
 
         logado.idDisciplinaProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("O ID da disciplina mudou de: " + oldValue + " para: " + newValue);
+            log.info("O ID da disciplina mudou de: " + oldValue + " para: " + newValue);
 
             if (newValue != null) {
                 atualizarDadosPlanejamento();
@@ -117,7 +120,7 @@ public class ProfPlanejamentoController {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return hmapTemaPrioDepend;
@@ -144,7 +147,7 @@ public class ProfPlanejamentoController {
                 hmapDiaSemanaHorarios.put(diaSemana, listaHorariosDiaSemana);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         return hmapDiaSemanaHorarios;
@@ -328,10 +331,10 @@ public class ProfPlanejamentoController {
         if (aulasDesteTema < tema.getQtd_min_aulas()) {
             this.falhouCumprirQtdMinAulas = true;
             if (contadorCargaH >= limiteCargaH) {
-                System.out.println("AVISO: Limite de carga horária atingido antes de completar o tema: "
+                log.info("AVISO: Limite de carga horária atingido antes de completar o tema: "
                         + tema.getNome());
             } else {
-                System.out.println("ERRO: Datas insuficientes para o tema: " + tema.getNome());
+                log.error("ERRO: Datas insuficientes para o tema: " + tema.getNome());
             }
         }
 
@@ -497,7 +500,7 @@ public class ProfPlanejamentoController {
             atualizarDadosPlanejamento();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -569,7 +572,7 @@ public class ProfPlanejamentoController {
             carregarEstatisticasContexto(logado.getAno(), logado.getAnoSemestre(), logado.getIdCurso(), logado.getIdDisciplina());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             progressGeracao.setVisible(false);
             progressGeracao.setManaged(false);
@@ -616,7 +619,7 @@ public class ProfPlanejamentoController {
                 limparCamposEstatisticas();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             limparCamposEstatisticas();
         }
     }

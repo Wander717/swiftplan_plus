@@ -9,8 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DependenciaTemaDAO {
+    private static final Logger log = LoggerFactory.getLogger(DependenciaTemaDAO.class);
 
     // LISTAR DEPENDÊNCIAS DE UM TEMA
     public List<DependenciaTema> listarDependenciasTema(
@@ -69,7 +72,7 @@ public class DependenciaTemaDAO {
 
         } catch (SQLException e) {
 
-            System.out.println(
+            log.info(
                     "Erro ao listar dependências: "
                             + e.getMessage()
             );
@@ -111,10 +114,10 @@ public class DependenciaTemaDAO {
             }
 
             conn.commit(); // confirma tudo junto
-            System.out.println("Dependências salvas com sucesso!");
+            log.info("Dependências salvas com sucesso!");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao salvar dependências: " + e.getMessage());
+            log.error("Erro ao salvar dependências: " + e.getMessage());
             // o AutoCommit volta ao padrão ao fechar a conexão, revertendo a transação
         }
     }
@@ -128,10 +131,10 @@ public class DependenciaTemaDAO {
 
             stmt.setInt(1, temaId);
             stmt.executeUpdate();
-            System.out.println("Dependências do tema " + temaId + " removidas.");
+            log.info("Dependências do tema " + temaId + " removidas.");
 
         } catch (SQLException e) {
-            System.out.println("Erro ao deletar dependências: " + e.getMessage());
+            log.error("Erro ao deletar dependências: " + e.getMessage());
         }
     }
 

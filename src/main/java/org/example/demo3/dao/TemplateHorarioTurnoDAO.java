@@ -7,8 +7,11 @@ import java.util.List;
 
 import org.example.demo3.DatabaseConnection;
 import org.example.demo3.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TemplateHorarioTurnoDAO {
+    private static final Logger log = LoggerFactory.getLogger(TemplateHorarioTurnoDAO.class);
 
     public void deletarTemplateTurno(String turno) {
         String sql = """
@@ -22,7 +25,7 @@ public class TemplateHorarioTurnoDAO {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            System.err.println("Erro ao deletar dados no banco: " + e.getMessage());
+            log.error("Erro ao deletar dados no banco: " + e.getMessage());
         }
     }
 
@@ -45,7 +48,7 @@ public class TemplateHorarioTurnoDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao inserir dados no banco: " + e.getMessage());
+            log.error("Erro ao inserir dados no banco: " + e.getMessage());
         }
     }
 
@@ -128,7 +131,7 @@ public class TemplateHorarioTurnoDAO {
 
 
         } catch (SQLException e) {
-            System.err.println("Erro ao recuperar THT 'listarTodosHorariosTurnos': " + e.getMessage());
+            log.error("Erro ao recuperar THT 'listarTodosHorariosTurnos': " + e.getMessage());
         }
         return listTHT;
     }

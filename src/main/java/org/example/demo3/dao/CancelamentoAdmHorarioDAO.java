@@ -10,8 +10,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CancelamentoAdmHorarioDAO {
+    private static final Logger log = LoggerFactory.getLogger(CancelamentoAdmHorarioDAO.class);
 
     public List<CancelamentoAdmHorario> listarHorariosDeCancelamento(Integer cancelamento_adm_id) throws SQLException {
         String sql = "SELECT * FROM cancelamento_adm_horario WHERE cancelamento_adm_id = ?";
@@ -35,7 +38,7 @@ public class CancelamentoAdmHorarioDAO {
             }
 
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             DatabaseConnection.closeConnection();
         }
@@ -62,7 +65,7 @@ public class CancelamentoAdmHorarioDAO {
                 listCadmH.add(cadmH);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar horarios datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao listar horarios datas bloqueadas: " + e.getMessage());
         }
         return listCadmH;
     }
@@ -92,7 +95,7 @@ public class CancelamentoAdmHorarioDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao listar horarios cadmh 'listarHorariosDeCancelamentos': " + e.getMessage());
+            log.error("Erro ao listar horarios cadmh 'listarHorariosDeCancelamentos': " + e.getMessage());
         }
         return listCadmH;
     }
@@ -112,7 +115,7 @@ public class CancelamentoAdmHorarioDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("\n\nErro ao salvar 'CadmH - salvarEmLote': " + e.getMessage() + "\n\n");
+            log.error("\n\nErro ao salvar 'CadmH - salvarEmLote': " + e.getMessage() + "\n\n");
         }
     }
 

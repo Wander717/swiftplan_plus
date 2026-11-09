@@ -7,8 +7,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SemestreLetivoDAO {
+    private static final Logger log = LoggerFactory.getLogger(SemestreLetivoDAO.class);
 
     public List<SemestreLetivo> listarProfessorAnoESemestreAno(int professorId) throws SQLException {
         String sql = """
@@ -37,7 +40,7 @@ public class SemestreLetivoDAO {
                 lista.add(sl);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar temas: " + e.getMessage());
+            log.error("Erro ao listar temas: " + e.getMessage());
             throw e;
         } finally {
             DatabaseConnection.closeConnection();
@@ -65,7 +68,7 @@ public class SemestreLetivoDAO {
                 return rs.getInt("id_semestre_letivo");
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar temas: " + e.getMessage());
+            log.error("Erro ao listar temas: " + e.getMessage());
             throw e;
         } finally {
             DatabaseConnection.closeConnection();
@@ -97,7 +100,7 @@ public class SemestreLetivoDAO {
                 return sl;
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar temas: " + e.getMessage());
+            log.error("Erro ao listar temas: " + e.getMessage());
         }
         return null;
     }
@@ -125,7 +128,7 @@ public class SemestreLetivoDAO {
                 lista.add(sl);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar temas: " + e.getMessage());
+            log.error("Erro ao listar temas: " + e.getMessage());
             throw e;
         } finally {
             DatabaseConnection.closeConnection();
@@ -160,7 +163,7 @@ public class SemestreLetivoDAO {
                 lista.add(sl);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar temas: " + e.getMessage());
+            log.error("Erro ao listar temas: " + e.getMessage());
             throw e;
         } finally {
             DatabaseConnection.closeConnection();

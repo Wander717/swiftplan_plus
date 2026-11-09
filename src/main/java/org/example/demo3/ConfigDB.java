@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConfigDB {
+    private static final Logger log = LoggerFactory.getLogger(ConfigDB.class);
 
     private static final Properties properties = new Properties();
 
@@ -16,21 +19,21 @@ public class ConfigDB {
         if (externalConfig.exists()) {
             try (InputStream input = new FileInputStream(externalConfig)) {
                 properties.load(input);
-                System.out.println("Configuração carregada do arquivo externo.");
+                log.info("Configuração carregada do arquivo externo.");
             } catch (IOException ex) {
-                ex.printStackTrace();
+                log.error("Erro inesperado: {}", ex.getMessage(), ex);
             }
         } else {
             // 2º fallback: lê o interno do resources (ambiente de desenvolvimento)
             try (InputStream input = ConfigDB.class.getClassLoader().getResourceAsStream("db.properties")) {
                 if (input == null) {
-                    System.err.println("Arquivo db.properties não encontrado.");
+                    log.error("Arquivo db.properties não encontrado.");
                 } else {
                     properties.load(input);
-                    System.out.println("Configuração carregada do resources interno.");
+                    log.info("Configuração carregada do resources interno.");
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                log.error("Erro inesperado: {}", ex.getMessage(), ex);
             }
         }
     }

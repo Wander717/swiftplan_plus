@@ -20,8 +20,11 @@ import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AdmCursosHorariosController {
+    private static final Logger log = LoggerFactory.getLogger(AdmCursosHorariosController.class);
 
     // =========================================================================
     //  FXML — FORMULÁRIO DE CURSO
@@ -195,7 +198,7 @@ public class AdmCursosHorariosController {
             tabelaCursos.setItems(FXCollections.observableArrayList(
                     new CursoDAO().listarTodosCursosDTO()));
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -269,7 +272,7 @@ public class AdmCursosHorariosController {
             linhasHorarios.setAll(thtProcessando);
             tabelaHorarios.setItems(linhasHorarios);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             exibirAlerta("Erro", "Não foi possível atualizar a tabela de horários.", Alert.AlertType.ERROR);
         }
     }
@@ -336,7 +339,7 @@ public class AdmCursosHorariosController {
                 linhasHorarios.clear();
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
 
@@ -362,7 +365,7 @@ public class AdmCursosHorariosController {
             if (selecionado != null)
                 idProfSelecionado = uDao.buscarUsuarioPorEmailUnico(selecionado).getId_usuario();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -418,7 +421,7 @@ public class AdmCursosHorariosController {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
 
         reiniciarFormularioCurso();
@@ -512,7 +515,7 @@ public class AdmCursosHorariosController {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -547,7 +550,7 @@ public class AdmCursosHorariosController {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -570,7 +573,7 @@ public class AdmCursosHorariosController {
             encerrarModoEdicao();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             exibirAlerta("Erro", "Não foi possível excluir o curso.", Alert.AlertType.ERROR);
         }
     }
@@ -586,7 +589,7 @@ public class AdmCursosHorariosController {
                 opcoes.add(prof.getEmail());
             cbProfessorCurso.setItems(opcoes);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -660,7 +663,7 @@ public class AdmCursosHorariosController {
             atualizarVisibilidadeBtnDeletarTodos();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -688,7 +691,7 @@ public class AdmCursosHorariosController {
             thtDao.salvarListaTemplate(tabelaHorarios.getItems());
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             exibirAlerta("Erro", "Não foi possível propagar os horários.", Alert.AlertType.ERROR);
         }
     }
@@ -734,7 +737,7 @@ public class AdmCursosHorariosController {
             carregarCursos();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             exibirAlerta("Erro ao salvar", "Não foi possível salvar os horários.", Alert.AlertType.ERROR);
             return;
         }
@@ -770,7 +773,7 @@ public class AdmCursosHorariosController {
             encerrarModoEdicao();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
             exibirAlerta("Erro ao alterar", "Não foi possível alterar os horários.", Alert.AlertType.ERROR);
         }
     }
@@ -786,7 +789,7 @@ public class AdmCursosHorariosController {
                 hcDao.removerHorarioOrdemCursoSL(
                         tht.getNumero_ordem(), idCursoProcessando, idSemestreLetivoProcessando);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
                 exibirAlerta("Erro ao deletar",
                         "Não foi possível deletar o horário.", Alert.AlertType.ERROR);
                 return;
@@ -808,7 +811,7 @@ public class AdmCursosHorariosController {
                 hcDao.removerHorariosCursoSLEmCascata(idCursoProcessando, idSemestreLetivoProcessando);
                 carregarHorarios();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
                 exibirAlerta("Erro ao deletar", "Não foi possível deletar os horários.", Alert.AlertType.ERROR);
                 return;
             }

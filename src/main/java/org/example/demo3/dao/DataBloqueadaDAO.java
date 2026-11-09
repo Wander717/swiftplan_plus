@@ -8,8 +8,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataBloqueadaDAO {
+    private static final Logger log = LoggerFactory.getLogger(DataBloqueadaDAO.class);
 
     public void salvar(DataBloqueada db) throws SQLException {
         String sql = "INSERT INTO data_bloqueada (semestre_letivo_id, data, motivo, adm_id, recorrente) VALUES (?, ?, ?, ?, ?)";
@@ -25,7 +28,7 @@ public class DataBloqueadaDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Erro ao salvar data bloqueada: " + e.getMessage());
+            log.error("Erro ao salvar data bloqueada: " + e.getMessage());
             throw e;
         }
     }
@@ -47,7 +50,7 @@ public class DataBloqueadaDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao salvar data bloqueada em cadeia: " + e.getMessage());
+            log.error("Erro ao salvar data bloqueada em cadeia: " + e.getMessage());
             throw e;
         }
     }
@@ -74,7 +77,7 @@ public class DataBloqueadaDAO {
             conn.commit();
 
         } catch (SQLException e) {
-            System.err.println("Erro ao atualizar lote de datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao atualizar lote de datas bloqueadas: " + e.getMessage());
             throw e;
         }
     }
@@ -93,7 +96,7 @@ public class DataBloqueadaDAO {
                 return rs.getString("motivo");
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao listar datas bloqueadas: " + e.getMessage());
             throw e;
         }
         return null;
@@ -115,7 +118,7 @@ public class DataBloqueadaDAO {
                 listaDatas.add(rs.getObject("data", LocalDate.class));
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao listar datas bloqueadas: " + e.getMessage());
             throw e;
         }
         return listaDatas;
@@ -142,7 +145,7 @@ public class DataBloqueadaDAO {
                 lista.add(db);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar datas bloqueadas: " + e.getMessage());
+            log.error("Erro ao listar datas bloqueadas: " + e.getMessage());
             throw e;
         }
         return lista;
@@ -170,7 +173,7 @@ public class DataBloqueadaDAO {
                 listaDataBloqueada.add(db);
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao listar datas bloqueadas 'listarDataBloqueadaPorSemestre': " + e.getMessage());
+            log.error("Erro ao listar datas bloqueadas 'listarDataBloqueadaPorSemestre': " + e.getMessage());
         }
         return listaDataBloqueada;
     }
@@ -190,7 +193,7 @@ public class DataBloqueadaDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         return datas;
     }
@@ -212,7 +215,7 @@ public class DataBloqueadaDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao excluir data bloqueada em lote: " + e.getMessage());
+            log.error("Erro ao excluir data bloqueada em lote: " + e.getMessage());
             throw e;
         }
     }
@@ -227,7 +230,7 @@ public class DataBloqueadaDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Erro ao excluir data bloqueada: " + e.getMessage());
+            log.error("Erro ao excluir data bloqueada: " + e.getMessage());
             throw e;
         }
     }

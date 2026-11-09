@@ -6,8 +6,11 @@ import org.example.demo3.entity.Curso;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CursoDAO {
+    private static final Logger log = LoggerFactory.getLogger(CursoDAO.class);
 
     public CursoDAO() {}
 
@@ -152,13 +155,13 @@ public class CursoDAO {
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("Update realizado com sucesso!");
+                log.info("Update realizado com sucesso!");
             } else {
-                System.out.println("Nenhum registro encontrado com o Nome fornecido.");
+                log.info("Nenhum registro encontrado com o Nome fornecido.");
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao executar update: " + e.getMessage());
+            log.error("Erro ao executar update: " + e.getMessage());
         }
     }
 

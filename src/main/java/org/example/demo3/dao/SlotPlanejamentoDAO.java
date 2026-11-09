@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SlotPlanejamentoDAO {
+    private static final Logger log = LoggerFactory.getLogger(SlotPlanejamentoDAO.class);
 
     private Connection getConnection() {
         return DatabaseConnection.getConnection();
@@ -61,7 +64,7 @@ public class SlotPlanejamentoDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             DatabaseConnection.closeConnection();
         }
@@ -83,7 +86,7 @@ public class SlotPlanejamentoDAO {
             stmt.executeBatch();
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         } finally {
             DatabaseConnection.closeConnection();
         }
@@ -110,7 +113,7 @@ public class SlotPlanejamentoDAO {
             ps.executeBatch();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -127,7 +130,7 @@ public class SlotPlanejamentoDAO {
             ps.executeUpdate();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 }

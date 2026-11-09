@@ -26,11 +26,15 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //VISUAL
 
 
 public class MainShellController {
+    private static final Logger log = LoggerFactory.getLogger(MainShellController.class);
+
     @FXML private ComboBox<String> cbAno;
     @FXML private ToggleButton tbSem1;
     @FXML private ToggleButton tbSem2;
@@ -65,7 +69,7 @@ public class MainShellController {
         UsuarioAtual logado = UsuarioAtual.getInstancia();
 
         if (logado.getId_usuario() == null) {
-            System.out.println("Erro: Nenhum usuário logado!");
+            log.error("Erro: Nenhum usuário logado!");
             carregarConteudo("/login.fxml");
             return;
         }
@@ -132,7 +136,7 @@ public class MainShellController {
                 logado.setIdCurso(cDAO.listarIdCurso(cbCurso.getValue()));
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -145,7 +149,7 @@ public class MainShellController {
                 logado.setIdCurso(curso.getId_curso());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -216,7 +220,7 @@ public class MainShellController {
             calendarioAtivoController.abrirAbaBloqueios();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         if (!verificarBotoesSemestres()) {return;}
     }
@@ -235,7 +239,7 @@ public class MainShellController {
                 popularComboBoxAnos();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -249,7 +253,7 @@ public class MainShellController {
                 popularComboboxCursos();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -264,7 +268,7 @@ public class MainShellController {
                 popularComboboxCursoSemestres();
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -360,7 +364,7 @@ public class MainShellController {
             coordPainelAtivoController = null;
             calendarioAtivoController = null;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -415,7 +419,7 @@ public class MainShellController {
                 processarDadosCursoSemestresEDisciplinas();
 
             } catch (SQLException e){
-                e.printStackTrace();
+                log.error("Erro inesperado: {}", e.getMessage(), e);
             }
         }
     }
@@ -449,7 +453,7 @@ public class MainShellController {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -471,7 +475,7 @@ public class MainShellController {
                 calendarioAtivoController.carregarDadosPorAnoESemestre(logado.getAno(), logado.getAnoSemestre());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
     }
 
@@ -496,7 +500,7 @@ public class MainShellController {
             planejamentoAtivoController = null;
             calendarioAtivoController = null;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         if (!verificarBotoesSemestres()) {return;}
     }
@@ -517,7 +521,7 @@ public class MainShellController {
             coordPainelAtivoController = null;
             calendarioAtivoController = null;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro inesperado: {}", e.getMessage(), e);
         }
         if (!verificarBotoesSemestres()) {return;}
     }
@@ -529,7 +533,7 @@ public class MainShellController {
                 service.criarSemestre1DoAnoAtual(1); // só passa o ID do adm
                 exibirAlerta("Aviso", "Foram adicionados de forma provisória: Ano, Semestre e Sprints. Você deve alterá-los de acordo com a sua necessidade na página 'Calendário Acadêmico'.");
             } catch (SQLException e) {
-                System.out.println("Erro ao criar semestre: " + e.getMessage());
+                log.error("Erro ao criar semestre: " + e.getMessage());
             }
         }
         processarDadosAnos();
