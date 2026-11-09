@@ -119,8 +119,10 @@ Os commits seguem o padrão **Conventional Commits**, em português:
 
 ### 🔍 Sistema de Log (Auditoria)
 
--   [ ] Tabela `audit_log` no banco de dados com campos: `id`, `usuario`, `acao`, `descricao`, `data_hora`
--   [ ] Registro automático ao criar, editar ou remover registros
+-   [x] Tabela `audit_log` no banco de dados (`database/audit_log.sql`) com campos: `id_audit_log`, `usuario_id`, `usuario_nome`, `tipo_usuario`, `acao`, `descricao`, `data_hora`
+-   [x] Módulo `audit/` com `AuditoriaService.registrar(...)`, usado a partir da sessão do usuário logado
+-   [x] Registro de auditoria nas ações de criar, editar ou remover em **Temas**
+-   [ ] Registro de auditoria nas ações de criar, editar ou remover em Disciplinas, Atribuições, Bloqueios e Usuários
 -   [ ] Tela de consulta do histórico de atividades (somente leitura)
 
 ### 🐛 Correção de Bugs
