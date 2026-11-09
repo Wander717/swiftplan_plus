@@ -1,0 +1,71 @@
+package org.example.demo3.dao;
+
+import org.example.demo3.DatabaseConnection;
+import org.example.demo3.audit.AcaoAuditoria;
+import org.example.demo3.entity.AuditLog;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AuditLogDAO {
+
+    // INSERE UM REGISTRO DE AUDITORIA
+    // O nome do usuário é copiado da tabela usuario no momento da ação.
+    public void inserir(Integer usuarioId, String tipoUsuario, AcaoAuditoria acao, String descricao) throws SQLException {
+        String sql = """
+            INSERT INTO audit_log (usuario_id, usuario_nome, tipo_usuario, acao, descricao)
+            SELECT u.id_usuario, u.nome, ?, ?, ?
+            FROM usuario u
+            WHERE u.id_usuario = ?
+            """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, tipoUsuario);
+            ps.setString(2, acao.name());
+            ps.setString(3, descricao);
+            ps.setInt(4, usuarioId);
+            ps.executeUpdate();
+        }
+    }
+
+    // LISTA OS REGISTROS DO MAIS RECENTE PARA O MAIS ANTIGO
+    public List<AuditLog> listarRecentes(int limite) {
+        List<AuditLog> registros = new ArrayList<>();
+        String sql = """
+            SELECT * FROM audit_log
+            ORDER BY data_hora DESC, id_audit_log DESC
+            LIMIT ?
+            """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, limite);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    AuditLog log = new AuditLog();
+                    log.setId_audit_log(rs.getInt("id_audit_log"));
+                    int usuarioId = rs.getInt("usuario_id");
+                    log.setUsuario_id(rs.wasNull() ? null : usuarioId);
+                    log.setUsuario_nome(rs.getString("usuario_nome"));
+                    log.setTipo_usuario(rs.getString("tipo_usuario"));
+                    log.setAcao(AcaoAuditoria.valueOf(rs.getString("acao")));
+                    log.setDescricao(rs.getString("descricao"));
+                    Timestamp ts = rs.getTimestamp("data_hora");
+                    log.setData_hora(ts == null ? null : ts.toLocalDateTime());
+                    registros.add(log);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar auditoria: " + e.getMessage());
+        }
+        return registros;
+    }
+}

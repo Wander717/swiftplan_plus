@@ -34,3 +34,6 @@ replay_pid*
 *.sql
 *db.properties
 # Only ignore .sql if you don't want to version control your DB dumps.
+# Scripts de criação do banco versionados (exceção à regra acima)
+!database/
+!database/*.sql

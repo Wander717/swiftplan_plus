@@ -1,0 +1,40 @@
+package org.example.demo3.audit;
+
+import org.example.demo3.UsuarioAtual;
+import org.example.demo3.dao.AuditLogDAO;
+
+import java.sql.SQLException;
+
+/**
+ * Registra no banco as ações realizadas pelo usuário logado.
+ *
+ * Uso: chamar após a operação de negócio ser concluída com sucesso, por exemplo:
+ *   AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+ *       "criou o Tema \"Introdução à POO\" para a Disciplina \"Programação I\"");
+ *
+ * Falhas de auditoria nunca interrompem a operação principal: são apenas reportadas.
+ */
+public final class AuditoriaService {
+
+    private static final AuditLogDAO dao = new AuditLogDAO();
+
+    private AuditoriaService() {
+    }
+
+    public static void registrar(AcaoAuditoria acao, String descricao) {
+        UsuarioAtual sessao = UsuarioAtual.getInstancia();
+        Integer usuarioId = sessao.getId_usuario();
+
+        if (usuarioId == null) {
+            // Sem usuário logado não há quem registrar; a ação não é auditada.
+            System.err.println("Auditoria ignorada (nenhum usuário logado): " + descricao);
+            return;
+        }
+
+        try {
+            dao.inserir(usuarioId, sessao.getTipo(), acao, descricao);
+        } catch (SQLException e) {
+            System.err.println("Falha ao registrar auditoria: " + e.getMessage());
+        }
+    }
+}
