@@ -100,6 +100,11 @@ db.password=sua_senha
 
 > O arquivo `db.properties` não é versionado (está no `.gitignore`), pois contém credenciais.
 
+### 🗂️ Onde ficam os registros
+
+-   **Auditoria (ações dos usuários):** tabela `audit_log` no banco, visível para o ADM em "📜 Histórico de Atividades".
+-   **Log técnico (erros e diagnósticos):** `logs/swiftplan.log`, com rotação diária e limite de 10 MB por arquivo. Configuração em `src/main/resources/logback.xml`. A pasta `logs/` não é versionada.
+
 ----------
 
 ## 📝 Padrão de commits
@@ -124,11 +129,16 @@ Os commits seguem o padrão **Conventional Commits**, em português:
 -   [x] Registro de auditoria nas ações de criar, editar ou remover em **Temas**
 -   [x] Registro de auditoria nas ações de criar, editar ou remover em Disciplinas, Atribuições, Bloqueios, Professores, Coordenadores e Administradores
 -   [ ] Criação do primeiro administrador na tela de primeiro acesso (`LoginController`) não é auditada, pois não há usuário logado nesse momento
--   [ ] Tela de consulta do histórico de atividades (somente leitura)
+-   [x] Tela de consulta do histórico de atividades (somente leitura), disponível para o perfil ADM em "📜 Histórico de Atividades"
 
 ### 🐛 Correção de Bugs
 
 -   [ ] _(a ser documentado conforme os bugs forem identificados e corrigidos)_
+
+### 🩺 Log técnico (diagnóstico)
+
+-   [x] Logback configurado (console e arquivo rotativo em `logs/`)
+-   [x] `System.out`, `System.err` e `printStackTrace()` substituídos pelo logger
 
 ### 🧹 Refatoração
 
