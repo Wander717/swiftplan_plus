@@ -37,3 +37,6 @@ replay_pid*
 # Scripts de criação do banco versionados (exceção à regra acima)
 !database/
 !database/*.sql
+
+### Logs de execução (log técnico) ###
+logs/
