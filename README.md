@@ -122,7 +122,8 @@ Os commits seguem o padrão **Conventional Commits**, em português:
 -   [x] Tabela `audit_log` no banco de dados (`database/audit_log.sql`) com campos: `id_audit_log`, `usuario_id`, `usuario_nome`, `tipo_usuario`, `acao`, `descricao`, `data_hora`
 -   [x] Módulo `audit/` com `AuditoriaService.registrar(...)`, usado a partir da sessão do usuário logado
 -   [x] Registro de auditoria nas ações de criar, editar ou remover em **Temas**
--   [ ] Registro de auditoria nas ações de criar, editar ou remover em Disciplinas, Atribuições, Bloqueios e Usuários
+-   [x] Registro de auditoria nas ações de criar, editar ou remover em Disciplinas, Atribuições, Bloqueios, Professores, Coordenadores e Administradores
+-   [ ] Criação do primeiro administrador na tela de primeiro acesso (`LoginController`) não é auditada, pois não há usuário logado nesse momento
 -   [ ] Tela de consulta do histórico de atividades (somente leitura)
 
 ### 🐛 Correção de Bugs
