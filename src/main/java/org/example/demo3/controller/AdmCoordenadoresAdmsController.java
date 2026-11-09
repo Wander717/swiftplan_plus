@@ -9,6 +9,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.example.demo3.DatabaseConnection;
 import org.example.demo3.UsuarioAtual;
+import org.example.demo3.audit.AcaoAuditoria;
+import org.example.demo3.audit.AuditoriaService;
 import org.example.demo3.dao.CursoDAO;
 import org.example.demo3.dao.UsuarioDAO;
 import org.example.demo3.dao.UsuarioTipoDAO;
@@ -414,6 +416,8 @@ public class AdmCoordenadoresAdmsController {
                 ut.setUsuario_id(novoId);
                 ut.setTipo("COORD");
                 usuarioTipoDAO.inserirUsuarioTipo(ut);
+                AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                        "cadastrou o Coordenador \"" + novo.getNome() + "\"");
 
                 if (idCursoSelecionado != null) {
                     vincularCoordAoCurso(novoId, idCursoSelecionado);
@@ -430,6 +434,8 @@ public class AdmCoordenadoresAdmsController {
                 }
 
                 usuarioDAO.editarUsuario(coordenadorSelecionado);
+                AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                        "editou o Coordenador \"" + coordenadorSelecionado.getNome() + "\"");
 
                 for (Curso c : cursoDAO.buscarCursoCoordenador(coordenadorSelecionado.getId_usuario())) {
                     cursoDAO.removerCoordenadorDeCurso(c.getId_curso());
@@ -478,6 +484,8 @@ public class AdmCoordenadoresAdmsController {
                 }
                 usuarioTipoDAO.excluirUsuarioTipo(coord.getId_usuario(), "COORD");
                 usuarioDAO.excluirUsuario(coord.getId_usuario());
+                AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                        "removeu o Coordenador \"" + coord.getNome() + "\"");
 
                 exibirAlerta("Sucesso", "Coordenador \"" + coord.getNome() + "\" removido.");
                 atualizarTabelas();
@@ -571,6 +579,8 @@ public class AdmCoordenadoresAdmsController {
                     ut.setUsuario_id(novoId);
                     ut.setTipo("ADM");
                     usuarioTipoDAO.inserirUsuarioTipo(ut);
+                    AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                            "cadastrou o Administrador \"" + novoAdm.getNome() + "\"");
                     exibirAlerta("Sucesso", "Novo Administrador cadastrado!");
                 } else {
                     exibirAlerta("Erro", "Falha ao gerar ID do Administrador.");
@@ -581,6 +591,8 @@ public class AdmCoordenadoresAdmsController {
                 if (!senha.isEmpty()) admSelecionado.setSenha_hash(senha);
 
                 usuarioDAO.editarUsuario(admSelecionado);
+                AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                        "editou o Administrador \"" + admSelecionado.getNome() + "\"");
                 exibirAlerta("Sucesso", "Administrador atualizado!");
             }
 
@@ -621,6 +633,8 @@ public class AdmCoordenadoresAdmsController {
         try {
             usuarioTipoDAO.excluirUsuarioTipo(adm.getId_usuario(), "ADM");
             usuarioDAO.excluirUsuario(adm.getId_usuario());
+            AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                    "removeu o Administrador \"" + adm.getNome() + "\"");
             exibirAlerta("Sucesso", "Administrador removido.");
             atualizarTabelas();
             handleNovoAdm();
