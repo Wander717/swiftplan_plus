@@ -14,6 +14,16 @@ import java.util.List;
 
 public class AuditLogDAO {
 
+    // OBTÉM A CONEXÃO OU FALHA DE FORMA CONTROLADA
+    // DatabaseConnection.getConnection() devolve null quando não há banco disponível.
+    private static Connection obterConexao() throws SQLException {
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) {
+            throw new SQLException("Sem conexão com o banco de dados.");
+        }
+        return conn;
+    }
+
     // INSERE UM REGISTRO DE AUDITORIA
     // O nome do usuário é copiado da tabela usuario no momento da ação.
     public void inserir(Integer usuarioId, String tipoUsuario, AcaoAuditoria acao, String descricao) throws SQLException {
@@ -24,7 +34,7 @@ public class AuditLogDAO {
             WHERE u.id_usuario = ?
             """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = obterConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, tipoUsuario);
@@ -44,7 +54,7 @@ public class AuditLogDAO {
             LIMIT ?
             """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = obterConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, limite);

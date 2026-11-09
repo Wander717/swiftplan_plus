@@ -33,7 +33,8 @@ public final class AuditoriaService {
 
         try {
             dao.inserir(usuarioId, sessao.getTipo(), acao, descricao);
-        } catch (SQLException e) {
+        } catch (SQLException | RuntimeException e) {
+            // RuntimeException também é capturada: a auditoria nunca pode quebrar a operação principal.
             System.err.println("Falha ao registrar auditoria: " + e.getMessage());
         }
     }
