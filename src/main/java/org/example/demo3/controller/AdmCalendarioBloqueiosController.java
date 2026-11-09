@@ -14,6 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.converter.LocalDateStringConverter;
 import org.example.demo3.DatabaseConnection;
 import org.example.demo3.UsuarioAtual;
+import org.example.demo3.audit.AcaoAuditoria;
+import org.example.demo3.audit.AuditoriaService;
 import org.example.demo3.dao.*;
 import org.example.demo3.entity.*;
 
@@ -398,6 +400,9 @@ public class AdmCalendarioBloqueiosController {
 
             if (checkFeriado.isSelected()){
                 databDao.salvarEmLote(datasSelecionadas);
+                AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                        "marcou " + datasSelecionadas.size() + " feriado(s) no calendário, motivo: \""
+                                + motivo + "\"");
             }
 
             linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
@@ -411,6 +416,9 @@ public class AdmCalendarioBloqueiosController {
 
         try {
             cancelamentoDAO.salvarEmLote(cancelamentosSelecionados);
+            AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                    "cancelou " + cancelamentosSelecionados.size() + " dia(s) inteiro(s), motivo: \""
+                            + motivo + "\"");
 
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
         } catch (SQLException e){
@@ -447,12 +455,17 @@ public class AdmCalendarioBloqueiosController {
         }
 
         cancelamentoAdmHDAO.salvarEmLote(listaCadmH);
+        AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                "cancelou horários do turno " + turno + " em " + cancelamentosSelecionados.size()
+                        + " data(s), motivo: \"" + motivo + "\"");
     }
 
     public void atualizarValoresFeriadoBanco(String motivo){
         try{
             List<DataBloqueada> datasSelecionadas = prepararListaDataBloqueada(motivo);
             databDao.atualizarEmLote(datasSelecionadas);
+            AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                    "alterou " + datasSelecionadas.size() + " feriado(s), motivo: \"" + motivo + "\"");
             linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
 
         } catch (SQLException e){
@@ -466,6 +479,9 @@ public class AdmCalendarioBloqueiosController {
 
         try{
             cancelamentoDAO.atualizarEmLote(cancelamentosSelecionados);
+            AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                    "alterou o cancelamento de " + cancelamentosSelecionados.size()
+                            + " dia(s) inteiro(s), motivo: \"" + motivo + "\"");
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
 
         } catch (SQLException e){
@@ -479,6 +495,9 @@ public class AdmCalendarioBloqueiosController {
             List<CancelamentoAdm> cancelamentosAtualizados = prepararListaCancelamentoHorario(motivo, turno);
             preservarCriadoEmOriginal(cancelamentosAtualizados);
             cancelamentoDAO.atualizarEmLote(cancelamentosAtualizados);
+            AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                    "alterou o cancelamento de horários do turno " + turno + " em "
+                            + cancelamentosAtualizados.size() + " data(s), motivo: \"" + motivo + "\"");
 
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
 
@@ -547,6 +566,8 @@ public class AdmCalendarioBloqueiosController {
         try{
             List<DataBloqueada> datasSelecionadas = prepararListaDataBloqueada(motivo);
             databDao.excluirEmLote(datasSelecionadas);
+            AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                    "removeu " + datasSelecionadas.size() + " feriado(s), motivo: \"" + motivo + "\"");
             linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
 
         } catch (SQLException e){
@@ -558,6 +579,9 @@ public class AdmCalendarioBloqueiosController {
         List<CancelamentoAdm> cancelamentosSelecionados = prepararListaCancelamentoDiaInteiro(motivo);
         try{
             cancelamentoDAO.excluirEmLote(cancelamentosSelecionados);
+            AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                    "removeu o cancelamento de " + cancelamentosSelecionados.size()
+                            + " dia(s) inteiro(s), motivo: \"" + motivo + "\"");
             linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
 
         } catch (SQLException e){
@@ -1035,12 +1059,19 @@ public class AdmCalendarioBloqueiosController {
         switch (origem){
             case FERIADO -> {
                 linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
-                databDao.excluirEmLote(prepararListaDataBloqueada(motivo));
+                List<DataBloqueada> feriadosOrigem = prepararListaDataBloqueada(motivo);
+                databDao.excluirEmLote(feriadosOrigem);
+                AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                        "removeu " + feriadosOrigem.size() + " feriado(s), motivo: \"" + motivo + "\"");
                 linhasDataBloqueadaRecuperadaBanco = databDao.listarDataBloqueadaPorSemestre(idSemestreAtual);
             }
             case DIA_INTEIRO -> {
                 linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
-                cancelamentoDAO.excluirEmLote(prepararListaCancelamentoDiaInteiro(motivo));
+                List<CancelamentoAdm> diasOrigem = prepararListaCancelamentoDiaInteiro(motivo);
+                cancelamentoDAO.excluirEmLote(diasOrigem);
+                AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                        "removeu o cancelamento de " + diasOrigem.size()
+                                + " dia(s) inteiro(s), motivo: \"" + motivo + "\"");
                 linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
             }
             case HORARIO -> {
@@ -1057,6 +1088,9 @@ public class AdmCalendarioBloqueiosController {
                 }
 
                 cancelamentoDAO.excluirEmLote(cadmOrigem);
+                AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                        "removeu o cancelamento de horários em " + cadmOrigem.size()
+                                + " data(s), motivo: \"" + motivo + "\"");
                 linhasCancelamentoAdmRecuperadoBanco = cancelamentoDAO.recuperarTodosCancelamentoAdm(idSemestreAtual);
             }
         }
