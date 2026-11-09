@@ -145,6 +145,8 @@ Os commits seguem o padrão **Conventional Commits**, em português:
 -   [ ] Remoção de métodos duplicados nas classes DAO
 -   [ ] Padronização de nomenclatura de variáveis e métodos
 -   [ ] Separação adequada de responsabilidades (MVC)
+-   [x] Revisão do SQL montado por concatenação: não há injeção de SQL, pois as concatenações unem apenas trechos fixos e os valores sempre passam por `PreparedStatement`
+-   [ ] `DatabaseConnection.getConnection()` devolve `null` quando o banco está indisponível, e a maioria dos DAOs lança `NullPointerException` em vez de tratar a falha (o `AuditLogDAO` já trata)
 
 ----------
 
