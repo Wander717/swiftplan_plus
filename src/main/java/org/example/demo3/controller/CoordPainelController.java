@@ -18,6 +18,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.example.demo3.SlotPlanejamento;
 import org.example.demo3.UsuarioAtual;
+import org.example.demo3.audit.AcaoAuditoria;
+import org.example.demo3.audit.AuditoriaService;
 import org.example.demo3.dao.*;
 import org.example.demo3.entity.*;
 
@@ -242,10 +244,14 @@ public class CoordPainelController {
             if (disciplinaSelecionadaTabela != null) {
                 disciplina.setId_disciplina(disciplinaSelecionadaTabela.getId_disciplina());
                 disciplinaDAO.atualizarDisciplina(disciplina);
+                AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                        "editou a Disciplina \"" + disciplina.getNome() + "\"");
                 disciplinaSelecionadaTabela = disciplina;
                 exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Disciplina alterada com sucesso.");
             } else {
                 disciplinaDAO.inserirDisciplina(disciplina);
+                AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                        "criou a Disciplina \"" + disciplina.getNome() + "\"");
                 exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Disciplina cadastrada com sucesso.");
             }
             tabelaDisciplinas.getItems().setAll(disciplinaDAO.listarDisciplinas());
@@ -268,6 +274,8 @@ public class CoordPainelController {
 
             try {
                 disciplinaDAO.excluirDisciplina(disciplina.getId_disciplina()); // getter correto
+                AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                        "removeu a Disciplina \"" + disciplina.getNome() + "\"");
 
                 if (disciplinaSelecionadaTabela != null
                         && disciplinaSelecionadaTabela.getId_disciplina() == disciplina.getId_disciplina()) {
@@ -563,6 +571,8 @@ public class CoordPainelController {
                     professorSelecionadoTabela.setSenha_hash(pfProfSenha.getText());
                 }
                 usuarioDAO.editarUsuario(professorSelecionadoTabela);
+                AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                        "editou o Professor \"" + professorSelecionadoTabela.getNome() + "\"");
                 exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Professor atualizado com sucesso.");
                 handleLimparProf();
                 recarregarTabelaProfessores();
@@ -590,6 +600,8 @@ public class CoordPainelController {
                 usuarioTipo.setUsuario_id(novoId);
                 usuarioTipo.setTipo("PROF");
                 usuarioTipoDAO.inserirUsuarioTipo(usuarioTipo);
+                AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                        "cadastrou o Professor \"" + professor.getNome() + "\"");
 
                 // PopUp: atribuir agora ou cancelar cadastro
                 Alert popup = new Alert(Alert.AlertType.CONFIRMATION);
@@ -694,6 +706,14 @@ public class CoordPainelController {
                 } else {
                     usuarioTipoDAO.excluirUsuarioTipo(professor.getId_usuario(), "PROF");
                     usuarioDAO.excluirUsuario(professor.getId_usuario());
+                }
+
+                if (ehOProprioCoordenador) {
+                    AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                            "removeu o próprio papel de Professor");
+                } else {
+                    AuditoriaService.registrar(AcaoAuditoria.REMOVER,
+                            "removeu o Professor \"" + professor.getNome() + "\"");
                 }
 
                 if (professorSelecionadoTabela != null
@@ -814,6 +834,9 @@ public class CoordPainelController {
                         ah.setAtribuicao_id(atribuicaoAtual.getId_atribuicao_professor()));
                 atribuicaoHorarioDAO.substituirHorarios(
                         atribuicaoAtual.getId_atribuicao_professor(), horariosSelecionados);
+                AuditoriaService.registrar(AcaoAuditoria.EDITAR,
+                        "alterou os horários da Disciplina \"" + disc.getNome()
+                                + "\" do Professor \"" + prof.getNome() + "\"");
 
             } else {
                 AtribuicaoProfessor novaAtrib = new AtribuicaoProfessor();
@@ -825,6 +848,9 @@ public class CoordPainelController {
                 horariosSelecionados.forEach(ah ->
                         ah.setAtribuicao_id(novaAtrib.getId_atribuicao_professor()));
                 atribuicaoHorarioDAO.salvarLote(horariosSelecionados);
+                AuditoriaService.registrar(AcaoAuditoria.CRIAR,
+                        "atribuiu a Disciplina \"" + disc.getNome()
+                                + "\" ao Professor \"" + prof.getNome() + "\"");
 
                 atribuicaoAtual = novaAtrib;
             }
