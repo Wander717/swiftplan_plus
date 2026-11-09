@@ -477,6 +477,7 @@ public class MainShellController {
 
     @FXML void navCursosHorarios() { carregarConteudo("/adm_cursos_horarios.fxml"); }
     @FXML void navCoordenaodresAdms() {carregarConteudo("/adm_coordenadores_adms.fxml"); }
+    @FXML void navHistorico() {carregarConteudo("/audit_log.fxml"); }
     @FXML void navTemas() {
         carregarConteudo("/prof_temas.fxml");
         if (!verificarBotoesSemestres()) {return;}
